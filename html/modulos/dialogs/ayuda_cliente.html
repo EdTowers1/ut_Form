@@ -1,0 +1,56 @@
+<?prg
+#include "./lib/tweb/tweb.ch"
+
+    LOCAL o, oDlg, oBrw, aOptions
+	LOCAL aData := {;
+		{ 'CODE' => 'C001', 'FULLNAME' => 'Homer Hoaks' },;
+		{ 'CODE' => 'C002', 'FULLNAME' => 'Jean-Piere Thain' },;
+		{ 'CODE' => 'C003', 'FULLNAME' => 'Steve Staro' },;
+		{ 'CODE' => 'C004', 'FULLNAME' => 'Marge Simpson' },;
+		{ 'CODE' => 'C005', 'FULLNAME' => 'Lisa Simpson' },;
+		{ 'CODE' => 'C006', 'FULLNAME' => 'Bart Simpson' },;
+		{ 'CODE' => 'C007', 'FULLNAME' => 'Maggie Simpson' },;
+		{ 'CODE' => 'C008', 'FULLNAME' => 'Ned Flanders' },;
+		{ 'CODE' => 'C009', 'FULLNAME' => 'Maude Flanders' },;
+		{ 'CODE' => 'C010', 'FULLNAME' => 'Edna Krabappel' };
+	}
+
+	DEFINE DIALOG oDlg 			
+		
+		DEFINE FORM o OF oDlg 			
+		
+		INIT FORM o 	
+
+			ROW o 					
+				
+				COL o GRID 12
+				
+					//	https://tabulator.info/docs/5.4/options
+				
+					aOptions := { ;
+						'height' => '300px',				;					
+						'index' => 'id',   					;	// Default id
+						'selectable' => 1, 				;	// Podem posar 1 (sols 1 col)
+						'selectableRollingSelection' => .T.,;
+						'selectableRangeMode' => "click"	;
+					}														
+					
+					DEFINE BROWSE oBrw ID 'mytable' OPTIONS aOptions TITLE '<h5>Customer list</h5>' OF o 
+						
+						//	https://tabulator.info/docs/5.4/columns 
+						//	https://tabulator.info/docs/5.4/select#setup-formatting
+						COL oCol TO oBrw CONFIG { 'formatter' => "rowSelection", 'align' => "center", 'headerSort' => .F. }
+												
+						COL oCol TO oBrw CONFIG { 'title' => "Código", 'field' => "CODE" }
+						COL oCol TO oBrw CONFIG { 'title' => "Nombre Completo", 'field' => "FULLNAME" }
+						
+					INIT BROWSE oBrw DATA aData																				
+			
+				ENDCOL o				
+				
+			ENDROW o
+
+		ENDFORM o
+
+	INIT DIALOG oDlg RETURN
+?>

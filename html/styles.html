@@ -1,0 +1,118 @@
+<?prg
+#include "../lib/tweb/tweb.ch"
+
+LOCAL o, oWeb
+local cStyle := 'border: 1px solid red; box-shadow: 4px 4px 4px grey;'
+local cStyle_Icon := 'border: 1px solid #058232; box-shadow: 4px 4px 4px grey; margin-left: 15px; padding:0px;'
+/*local cStyle_RowGroup := 'display: flex; align-items: center; gap: 0; width: auto; flex: 1;'*/
+
+DEFINE WEB oWeb TITLE 'Style'
+
+	HTML oWeb FILE '..\tpl\header_examples.tpl' PARAMS 'Controls', 'Styles'
+
+	DEFINE FORM o  ID 'form_pedidos' API 'api_controls'  OF oWeb
+		//o:lDessign 	:= .t.
+		//o:lFluid 	:= .t.
+		o:cSizing   := 'sm'
+
+	INIT FORM o
+				ROWGROUP o
+				 COL o STYLE 'border: 0.5px solid gray; margin: 10px; padding: 10px; border-radius: 8px;'
+				 
+						DIV o STYLE 'box-shadow: 5px 2px 8px rgba(0,0,0,0.35); margin: 10px; padding: 10px; border-radius: 8px;'
+
+							ROW o CLASS 'gx-3'
+								// columna izquierda
+								COL o GRID 6
+									ROWGROUP o CLASS 'mb-2'
+										SAY VALUE 'Cliente :' GRID 3  ;
+							    	OF o
+										GET ID 'cCliente1'    GRID 9  ;
+										VALUE "Buscar cliente"    ;
+										BUTTON '<i class="fas fa-search"></i>' ACTION 'helpCli' BTNID 'btnBuscar1' ;
+										OF o
+									ENDROW o
+
+									ROWGROUP o CLASS 'mb-3'
+									GET MEMO ID 'mymemo1' GRID 12 VALUE 'Se debe mostrar info del cliente' ROWS 5  STYLE 'resize: none;' OF o
+									ENDROW o
+								ENDCOL o
+
+								// columna derecha
+								COL o GRID 6   // columna derecha (cliente 2)
+									ROWGROUP o CLASS 'mb-2'
+										SAY VALUE 'Orden # :' GRID 4 							;
+							    	ALIGN 'left' STYLE "display: block; text-align: right;" ;
+										OF o
+										GET ID 'cCliente2'     	  GRID 8 ;
+							    	VALUE ""  OF o
+									ENDROW o
+
+									ROWGROUP o CLASS 'mb-2'
+										SAY VALUE 'Fecha :'    GRID 4 								;
+							    	ALIGN 'left' STYLE "display: block; text-align: right;" ;
+										OF o
+										GET VALUE '2025-08-15' GRID 8 ;
+							    	ID 'get_date' TYPE 'date' ;
+										OF o
+									ENDROW o
+
+									ROWGROUP o CLASS 'mb-2'
+										SAY VALUE 'Tipo :' GRID 4 ;
+							    	STYLE "display: block; text-align: right;";
+										OF o
+										SELECT oSelect     GRID 8 						;
+							    	ID 'id-10' PROMPT 'Volvo', 'Seat', 'Renault';
+										VALUES 'V', 'S', 'R'  ONCHANGE 'getValues'  ;
+										OF o
+									ENDROW o
+								ENDCOL o
+
+					ENDROW o
+				ENDDIV o
+
+					DIV o STYLE 'box-shadow: 5px 2px 8px rgba(0,0,0,0.35); margin: 10px; padding: 10px; border-radius: 8px;'
+					// tabla sencilla: datos de prueba de cilindros
+					aOptions := { 'height' => '300px', 'layout' => 'fitColumns', 'selectable' => .t. }
+					aData := { ;
+						{ 'id' => 1, 'brand' => 'Bosch',    'diameter' => 50, 'length' => 200, 'pressure' => 250, 'material' => 'Acero',       'stock' => 12 },;
+						{ 'id' => 2, 'brand' => 'Schrader', 'diameter' => 40, 'length' => 180, 'pressure' => 200, 'material' => 'Aluminio',    'stock' => 5  },;
+						{ 'id' => 3, 'brand' => 'Parker',   'diameter' => 65, 'length' => 220, 'pressure' => 300, 'material' => 'Acero',       'stock' => 8  },;
+						{ 'id' => 4, 'brand' => 'Veta',     'diameter' => 32, 'length' => 150, 'pressure' => 150, 'material' => 'Acero Inox',  'stock' => 20 },;
+						{ 'id' => 5, 'brand' => 'Generic',  'diameter' => 80, 'length' => 250, 'pressure' => 350, 'material' => 'Titanio',     'stock' => 2  } ;
+					}
+
+					// contenedor para filtros de la tabla
+					HTML o INLINE '<div id="mini-myfilter"></div>'
+
+					// filtros disponibles para la tabla de cilindros
+					aFilter := { 'brand', 'diameter', 'length', 'pressure', 'material', 'stock' }
+
+					DEFINE BROWSE oBrw ID 'mini' OPTIONS aOptions FILTER aFilter FILTER_ID 'mini-myfilter' TITLE '<h6>Lista de Cilindros</h6>' OF o
+						COL oCol TO oBrw CONFIG { 'title' => "ID", 'field' => "id"}
+						COL oCol TO oBrw CONFIG { 'title' => "Marca", 'field' => "brand" }
+						COL oCol TO oBrw CONFIG { 'title' => "Diámetro (mm)", 'field' => "diameter", 'hozAlign' => 'center' }
+						COL oCol TO oBrw CONFIG { 'title' => "Largo (mm)", 'field' => "length", 'hozAlign' => 'center' }
+						COL oCol TO oBrw CONFIG { 'title' => "Presión (bar)", 'field' => "pressure", 'hozAlign' => 'center' }
+						COL oCol TO oBrw CONFIG { 'title' => "Material", 'field' => "material" }
+						COL oCol TO oBrw CONFIG { 'title' => "Stock", 'field' => "stock", 'hozAlign' => 'center' }
+					INIT BROWSE oBrw DATA aData
+
+
+				ENDDIV o
+
+				// botones debajo de la tabla
+					HTML o
+						<div class="d-flex justify-content-end mt-4">
+						<button type="submit" class="btn btn-primary px-4 mr-3">Enviar</button>
+						<button type="reset" class="btn btn-secondary px-4">Cancelar</button>
+					</div>
+					ENDTEXT
+
+
+			ENDCOL o
+		ENDCOL o
+		ENDROW o
+
+	INIT WEB oWeb RETURN
+?>
