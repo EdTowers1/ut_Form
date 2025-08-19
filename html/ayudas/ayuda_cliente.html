@@ -28,21 +28,25 @@
 					//	https://tabulator.info/docs/5.4/options
 				
 					aOptions := { ;
-						'height' => '300px',				;					
+						'height' => '400px',				;
+						'layout' => 'fitDataFill',			;
 						'index' => 'id',   					;	// Default id
 						'selectable' => 1, 				;	// Podem posar 1 (sols 1 col)
 						'selectableRollingSelection' => .T.,;
-						'selectableRangeMode' => "click"	;
+						'selectableRangeMode' => "click",	;
+						'headerFilterPlaceholder' => "",	;	// Placeholder para filtros
+						'headerFilter' => .T.,				;	// Habilitar filtros en encabezados
+						'pagination' => 'local',			;	// Paginación local
+						'paginationSize' => 10				;	// Elementos por página
 					}														
 					
-					DEFINE BROWSE oBrw ID 'mytable' OPTIONS aOptions TITLE '<h5>Customer list</h5>' OF o 
+					DEFINE BROWSE oBrw ID 'mytable' OPTIONS aOptions OF o 
 						
 						//	https://tabulator.info/docs/5.4/columns 
 						//	https://tabulator.info/docs/5.4/select#setup-formatting
-						COL oCol TO oBrw CONFIG { 'formatter' => "rowSelection", 'align' => "center", 'headerSort' => .F. }
 												
-						COL oCol TO oBrw CONFIG { 'title' => "Código", 'field' => "CODE" }
-						COL oCol TO oBrw CONFIG { 'title' => "Nombre Completo", 'field' => "FULLNAME" }
+						COL oCol TO oBrw CONFIG { 'title' => "Código", 'field' => "CODE", 'width' => 200, 'headerFilter' => "input", 'headerFilterPlaceholder' => "Buscar código..." }
+						COL oCol TO oBrw CONFIG { 'title' => "Nombre Completo", 'field' => "FULLNAME", 'headerFilter' => "input", 'headerFilterPlaceholder' => "Buscar nombre...", 'formatter' => "html", 'formatterParams' => { 'target' => "_blank" } }
 						
 					INIT BROWSE oBrw DATA aData																				
 			

@@ -1,4 +1,4 @@
-#include 'lib/uhttpd2/uhttpd2.ch'
+#include '../lib/uhttpd2/uhttpd2.ch'
 
 REQUEST DBFCDX
 
@@ -62,7 +62,6 @@ function WebServer()
 		oServer:Route( '/'			, '../html/modulos/recepcion_cil.html' ) 	
 
 		// Dialogs de prueba
-
 		oServer:Route( 'helpCli', '../html/modulos/dialogs/ayuda_cliente.html' )
 
 		/*

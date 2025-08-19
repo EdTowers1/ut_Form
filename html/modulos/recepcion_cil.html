@@ -21,31 +21,39 @@ DEFINE WEB oWeb TITLE 'Style'
 						ROW o CLASS 'gx-3'
 							// columna izquierda
 							COL o GRID 6
-								ROWGROUP o CLASS 'mb-2'
-									SAY VALUE 'Cliente :' GRID 3 OF o
-									GET ID 'cCliente1' GRID 9 VALUE "Buscar cliente" BUTTON '<i class="fas fa-search"></i>' ACTION 'helpCli' BTNID 'btnBuscar1' OF o
-								ENDROW o
-
-								ROWGROUP o CLASS 'mb-3'
-									GET MEMO ID 'mymemo1' GRID 12 VALUE 'Se debe mostrar info del cliente' ROWS 5 STYLE 'resize: none;' OF o
+								ROWGROUP o //CLASS 'mb-2'
+									GET ID 'cCliente1' GRID 12	;
+								 	    VALUE "Buscar cliente"	;
+									 	LABEL 'Cliente :'		;
+										BUTTON '<i class="fas fa-search"></i>';
+										ACTION 'helpCli' 		;
+										OF o
+									GET MEMO ID 'mymemo1' GRID 12;
+										 VALUE 'Se debe mostrar info del cliente';
+										 ROWS 5 STYLE 'resize: none; margin-top: 5px;';
+										 OF o
 								ENDROW o
 							ENDCOL o
 
 							// columna derecha
 							COL o GRID 6 // columna derecha (cliente 2)
-								ROWGROUP o CLASS 'mb-2'
-									SAY VALUE 'Orden # :' GRID 4 ALIGN 'left' STYLE "display: block; text-align: right;" OF o
-									GET ID 'cCliente2' GRID 8 VALUE "" OF o
-								ENDROW o
 
-								ROWGROUP o CLASS 'mb-2'
-									SAY VALUE 'Fecha :' GRID 4 ALIGN 'left' STYLE "display: block; text-align: right;" OF o
-									GET VALUE '2025-08-15' GRID 8 ID 'get_date' TYPE 'date' OF o
-								ENDROW o
-
-								ROWGROUP o CLASS 'mb-2'
-									SAY VALUE 'Tipo :' GRID 4 STYLE "display: block; text-align: right;" OF o
-									SELECT oSelect GRID 8 ID 'id-10' PROMPT 'Volvo', 'Seat', 'Renault' VALUES 'V', 'S', 'R' ONCHANGE 'getValues' OF o
+								ROWGROUP o  ///'mb-2'
+									GET ID 'cCliente2'  GRID 12	;
+									    VALUE "" 		  		;
+									    LABEL 'Orden # :'		;
+										OF o
+									GET ID 'get_date'   GRID 12	;
+									    VALUE '2025-08-15'		;
+										LABEL 'Fecha :'			;
+									    TYPE 'date'				;
+										OF o
+									SELECT oSelect ID 'id-10' GRID 12	;
+										PROMPT 'LLenado', 'Reparación', 'Traslado';
+										VALUES 'L', 'R', 'T'	;
+										LABEL 'Tipo :'			;
+										ONCHANGE 'getValues'	;
+  									    OF o
 								ENDROW o
 							ENDCOL o
 						ENDROW o

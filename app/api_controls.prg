@@ -1,5 +1,3 @@
-
-
 function Api_Controls( oDom )
 
 
@@ -45,9 +43,14 @@ static function DoHelpCli( oDom )
 	// local cprueba := 'Info del cliente' + CHR(13) + CHR(10) + 'direccion'
 	// oDom:Set( 'mymemo1', cprueba )
 
-	local cHtml := ULoadHtml( '../html/modulos/dialogs/ayuda_cliente.html'  )
+	local cHtml := ULoadHtml( '../html/ayudas/ayuda_cliente.html'  )
+	local o 	:= {=>}	
 
-	oDom:SetDialog( 'xxx', cHtml, 'Clientes' )
+		
+	o[ 'title' ] 		:= 'Clientes'	
+	o[ 'size' ] 		:= '60%'	
+
+	oDom:SetDialog( 'xxx', cHtml, nil, o )
 
 retu nil
 
