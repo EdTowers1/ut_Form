@@ -31,3 +31,5 @@ app\api_controls.prg
 {msvc64}-lhbwin
 -lxhb
 -lhbct
+-llibmysql64
+-ltdolphin

@@ -48,7 +48,7 @@ static function DoHelpCli( oDom )
 
 		
 	o[ 'title' ] 		:= 'Clientes'	
-	o[ 'size' ] 		:= '60%'	
+		
 
 	oDom:SetDialog( 'xxx', cHtml, nil, o )
 

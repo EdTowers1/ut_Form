@@ -2,18 +2,8 @@
 #include "./lib/tweb/tweb.ch"
 
     LOCAL o, oDlg, oBrw, aOptions
-	LOCAL aData := {;
-		{ 'CODE' => 'C001', 'FULLNAME' => 'Homer Hoaks' },;
-		{ 'CODE' => 'C002', 'FULLNAME' => 'Jean-Piere Thain' },;
-		{ 'CODE' => 'C003', 'FULLNAME' => 'Steve Staro' },;
-		{ 'CODE' => 'C004', 'FULLNAME' => 'Marge Simpson' },;
-		{ 'CODE' => 'C005', 'FULLNAME' => 'Lisa Simpson' },;
-		{ 'CODE' => 'C006', 'FULLNAME' => 'Bart Simpson' },;
-		{ 'CODE' => 'C007', 'FULLNAME' => 'Maggie Simpson' },;
-		{ 'CODE' => 'C008', 'FULLNAME' => 'Ned Flanders' },;
-		{ 'CODE' => 'C009', 'FULLNAME' => 'Maude Flanders' },;
-		{ 'CODE' => 'C010', 'FULLNAME' => 'Edna Krabappel' };
-	}
+
+		LOCAL aData := getClientes()  // Función que obtiene los datos de los clientes
 
 	DEFINE DIALOG oDlg 			
 		
@@ -28,7 +18,7 @@
 					//	https://tabulator.info/docs/5.4/options
 				
 					aOptions := { ;
-						'height' => '400px',				;
+						'height' => '500px',				;
 						'layout' => 'fitDataFill',			;
 						'index' => 'id',   					;	// Default id
 						'selectable' => 1, 				;	// Podem posar 1 (sols 1 col)
@@ -40,7 +30,7 @@
 						'paginationSize' => 10				;	// Elementos por página
 					}														
 					
-					DEFINE BROWSE oBrw ID 'mytable' OPTIONS aOptions OF o 
+					DEFINE BROWSE oBrw ID 'Clientes' OPTIONS aOptions OF o 
 						
 						//	https://tabulator.info/docs/5.4/columns 
 						//	https://tabulator.info/docs/5.4/select#setup-formatting
@@ -48,11 +38,33 @@
 						COL oCol TO oBrw CONFIG { 'title' => "Código", 'field' => "CODE", 'width' => 200, 'headerFilter' => "input", 'headerFilterPlaceholder' => "Buscar código..." }
 						COL oCol TO oBrw CONFIG { 'title' => "Nombre Completo", 'field' => "FULLNAME", 'headerFilter' => "input", 'headerFilterPlaceholder' => "Buscar nombre...", 'formatter' => "html", 'formatterParams' => { 'target' => "_blank" } }
 						
-					INIT BROWSE oBrw DATA aData																				
+					INIT BROWSE oBrw DATA aData													
 			
 				ENDCOL o				
 				
 			ENDROW o
+
+			ROWGROUP o 	HALIGN 'center'								
+				BUTTON LABEL 'Seleccionar' ACTION 'getSelected()' CLASS 'btn-primary' ALIGN 'center' WIDTH '200px' STYLE 'margin: 10px;' GRID 12 OF o 
+			ENDROW o
+
+		  	HTML o 
+					<script>
+						function getSelected() {
+
+							var o = new UTabulator('Clientes')
+							var row = o.Proc('getSelectedData')
+
+							if (row && row.length > 0) {
+								var cliente = row[0];
+								var mensaje = 'Código: ' + cliente.CODE + '<br>Nombre: ' + cliente.FULLNAME;
+								MsgInfo(mensaje);
+							} else {
+								MsgInfo('Por favor seleccione un cliente de la tabla', 'Aviso');
+							}
+						}
+					</script>
+				ENDTEXT
 
 		ENDFORM o
 
