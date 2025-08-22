@@ -19,7 +19,7 @@
 						'height' => '500px',									;
 						'layout' => 'fitDataFill',						;
 						'index' => 'id',   										;
-						'selectable' => 1, 										;	
+						'selectable' => .T., 									;	
 						'selectableRollingSelection' => .T.,	;
 						'selectableRangeMode' => "click",			;
 						'headerFilterPlaceholder' => "",			;	
@@ -27,7 +27,8 @@
 					}
 					
 					aEvents := { ;
-							 { 'name' => 'tableBuilt' , 'proc' => 'exe_consulta'} ;
+							{ 'name' => 'tableBuilt' , 'proc' => 'exe_consulta'},;
+							{ 'name' => 'rowClick' , 'proc' => 'seleccionar_cliente'  };
 					}
 					
 					DEFINE BROWSE oBrw ID 'clientes' OPTIONS aOptions EVENTS aEvents OF o 
@@ -71,29 +72,6 @@
 					HTML o INLINE '</div>'
 				ENDCOL o				
 			ENDROW o
-
-
-			ROWGROUP o 	HALIGN 'center'								
-				BUTTON LABEL 'Seleccionar' ACTION 'getSelected()' CLASS 'btn-primary' ALIGN 'center' WIDTH '200px' STYLE 'margin: 10px;' GRID 12 OF o 
-			ENDROW o
-
-		  	HTML o 
-					<script>
-						function getSelected() {
-
-							var o = new UTabulator('dlg_clientes-clientes')
-							var row = o.Proc('getSelectedData')
-
-							if (row && row.length > 0) {
-								var cliente = row[0];
-								var mensaje = 'Código: ' + cliente.CODCLI + '<br>Nombre: ' + cliente.NOMCLI;
-								MsgInfo(mensaje);
-							} else {
-								MsgInfo('Por favor seleccione un cliente de la tabla');
-							}
-						}
-					</script>
-				ENDTEXT
 
 		ENDFORM o
 

@@ -3,6 +3,7 @@ function api_clientes( oDom )
 
 	do case
 		case oDom:GetProc() == 'ayuda_cliente'            	; DoHelpCli( oDom )
+		case oDom:GetProc() == 'seleccionar_cliente'        ; DoSelecionar_Cliente( oDom )
 		case oDom:GetProc() == 'exe_consulta'       		; DoExeConsulta(oDom)
 		case oDom:GetProc() == 'nav_refresh'				; DoNav_Refresh( oDom )
 		case oDom:GetProc() == 'nav_top'					; DoNav_Top( oDom )
@@ -10,8 +11,8 @@ function api_clientes( oDom )
 		case oDom:GetProc() == 'nav_next'					; DoNav_Next( oDom )
 		case oDom:GetProc() == 'nav_end'					; DoNav_End( oDom )
 		case oDom:GetProc() == 'nav_print'					; DoNav_Print( oDom )
-  	otherwise
- 		oDom:SetError( "Proc don't defined => " + oDom:GetProc())
+			otherwise
+			oDom:SetError( "Proc don't defined => " + oDom:GetProc())
 	endcase
 
 
@@ -26,7 +27,6 @@ static function DoHelpCli( oDom )
 	local o     := {=>}
 
 	o[ 'title' ] := 'Clientes'
-	o[ 'size']   := '100% '
 	oDom:SetDialog( 'xxx', cHtml, nil, o )
 
 retu nil
@@ -43,14 +43,14 @@ Function DoExeConsulta( oDom )
 
 	// Obtener total de registros
 	if ! TotalRows( oDom, hInfo )
-		CloseDb( oDom, hInfo )
+		CloseConnect( oDom, hInfo )
 	endif
 
 	// Cargar datos de la primera página
 	LoadRows( oDom, hInfo, .T. )  // .T. = inicializar browse
 
 	// Cerrar conexión
-	CloseDb( oDom, hInfo )
+	CloseConnect( oDom, hInfo )
 
 	// Actualizar controles DOM
 	Refresh_Nav( oDom, hInfo )
@@ -116,7 +116,7 @@ static function DoNav_Next( oDom )
 
 	//	Close database connection
 
-	CloseDb( oDom, hInfo )
+	CloseConnect( oDom, hInfo )
 
 	//	Refresh Dom
 
@@ -139,7 +139,7 @@ retu hInfo
 
 // -------------------------------------------------- //
 
-static function CloseDb( oDom, hInfo )
+static function CloseConnect( oDom, hInfo )
 	if HB_HHasKey( hInfo, 'db' ) .and. hInfo[ 'db' ] != NIL
 		hInfo[ 'db' ]:End()
 	endif
@@ -186,7 +186,7 @@ static function LoadRows( oDom, hInfo, lInitBrw )
 	nRowInit := ( hInfo[ 'page' ] - 1 ) * hInfo[ 'page_rows']
 
 	// Construir SQL con LIMIT y OFFSET
-	cSql := "SELECT codcli, nomcli FROM munmacli LIMIT " + ;
+	cSql := "SELECT row_id, codcli, nomcli FROM munmacli LIMIT " + ;
 		ltrim(str(hInfo[ 'page_rows' ])) + " OFFSET " + ltrim(str(nRowInit))
 
 	oQry := hInfo[ 'db' ]:Query( cSql )
@@ -194,7 +194,7 @@ static function LoadRows( oDom, hInfo, lInitBrw )
 	IF oQry != NIL
 		oQry:gotop()
 		DO WHILE ! oQry:Eof()
-			aRow := { 'CODCLI' => oQry:codcli, 'NOMCLI' => hb_strtoutf8(oQry:nomcli) }
+			aRow := { 'ROW_ID' => oQry:row_id, 'CODCLI' => oQry:codcli, 'NOMCLI' => hb_strtoutf8(oQry:nomcli) }
 			AADD( aClientes, aRow )
 			oQry:Skip()
 		END
@@ -239,7 +239,7 @@ static function DoNav_Top( oDom )
 	LoadRows( oDom, hInfo )
 
 	// Cerrar conexión
-	CloseDb( oDom, hInfo )
+	CloseConnect( oDom, hInfo )
 
 	// Actualizar controles DOM
 	Refresh_Nav( oDom, hInfo )
@@ -268,7 +268,7 @@ static function DoNav_End( oDom )
 	LoadRows( oDom, hInfo )
 
 	// Cerrar conexión
-	CloseDb( oDom, hInfo )
+	CloseConnect( oDom, hInfo )
 
 	// Actualizar controles DOM
 	Refresh_Nav( oDom, hInfo )
@@ -301,7 +301,7 @@ static function DoNav_Prev( oDom )
 	LoadRows( oDom, hInfo )
 
 	// Cerrar conexión
-	CloseDb( oDom, hInfo )
+	CloseConnect( oDom, hInfo )
 
 	// Actualizar controles DOM
 	Refresh_Nav( oDom, hInfo )
@@ -334,12 +334,48 @@ static function DoNav_Refresh( oDom, hInfo )
 	Refresh_Nav( oDom, hInfo )
 
 	// Cerrar conexión
-	CloseDb( oDom, hInfo )
+	CloseConnect( oDom, hInfo )
 
 retu nil
-
 // -------------------------------------------------- //
 
 static function DoNav_Print( oDom )
 	oDom:TablePrint( 'clientes' )
+retu nil
+// -------------------------------------------------- //
+
+static function DoSelecionar_Cliente (oDom)
+
+	local hBrowse := oDom:Get( 'clientes' )
+	local aSelected := hBrowse[ 'selected' ]
+	local nRowId, hInfo, oQry, hFull, cInfoCliente := ""
+	
+	if len(aSelected) > 0
+		nRowId := aSelected[1]['ROW_ID']
+		
+		hInfo := InitInfo( oDom )
+		if ! OpenConnect( oDom, hInfo )
+			retu nil
+		endif
+		
+		oQry := hInfo['db']:Query( "SELECT * FROM munmacli WHERE row_id = " + ltrim(str(nRowId)) + " LIMIT 1" )
+		
+		if oQry != NIL .and. !oQry:eof()
+			hFull := oQry:FillHRow()
+			
+			//
+			//oDom:Console({ 'cliente' => hFull })
+		
+			cInfoCliente := "ID: " + ltrim(str(hFull['row_id'])) + CHR(13) + CHR(10) + ;
+				"Código: " + hFull['codcli'] + CHR(13) + CHR(10) + ;
+				"Nombre: " + hb_strtoutf8(hFull['nomcli']) + CHR(13) + CHR(10) ;
+													
+			oDom:SetDlg( 'form_pedidos' )
+			oDom:Set( 'mymemo1', cInfoCliente )
+			
+			oDom:DialogClose('ayuda_cliente')
+		endif
+		
+		CloseConnect( oDom, hInfo )
+	endif
 retu nil
