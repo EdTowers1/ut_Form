@@ -47,7 +47,8 @@ static function DoHelpCli( oDom )
 	local o 	:= {=>}	
 
 		
-	o[ 'title' ] 		:= 'Clientes'	
+	o[ 'title' ] 		:= 'Clientes'
+		
 		
 
 	oDom:SetDialog( 'xxx', cHtml, nil, o )

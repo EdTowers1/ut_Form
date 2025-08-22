@@ -3,12 +3,10 @@
 
     LOCAL o, oDlg, oBrw, aOptions
 
-		LOCAL aData := getClientes()  // Función que obtiene los datos de los clientes
+	DEFINE DIALOG oDlg 		
 
-	DEFINE DIALOG oDlg 			
-		
-		DEFINE FORM o OF oDlg 			
-		
+		DEFINE FORM o ID 'dlg_clientes' API 'api_clientes' OF oDlg			
+
 		INIT FORM o 	
 
 			ROW o 					
@@ -18,31 +16,62 @@
 					//	https://tabulator.info/docs/5.4/options
 				
 					aOptions := { ;
-						'height' => '500px',				;
-						'layout' => 'fitDataFill',			;
-						'index' => 'id',   					;	// Default id
-						'selectable' => 1, 				;	// Podem posar 1 (sols 1 col)
-						'selectableRollingSelection' => .T.,;
-						'selectableRangeMode' => "click",	;
-						'headerFilterPlaceholder' => "",	;	// Placeholder para filtros
-						'headerFilter' => .T.,				;	// Habilitar filtros en encabezados
-						'pagination' => 'local',			;	// Paginación local
-						'paginationSize' => 10				;	// Elementos por página
-					}														
+						'height' => '500px',									;
+						'layout' => 'fitDataFill',						;
+						'index' => 'id',   										;
+						'selectable' => 1, 										;	
+						'selectableRollingSelection' => .T.,	;
+						'selectableRangeMode' => "click",			;
+						'headerFilterPlaceholder' => "",			;	
+						'headerFilter' => .T.									;
+					}
 					
-					DEFINE BROWSE oBrw ID 'Clientes' OPTIONS aOptions OF o 
+					aEvents := { ;
+							 { 'name' => 'tableBuilt' , 'proc' => 'exe_consulta'} ;
+					}
+					
+					DEFINE BROWSE oBrw ID 'clientes' OPTIONS aOptions EVENTS aEvents OF o 
 						
 						//	https://tabulator.info/docs/5.4/columns 
 						//	https://tabulator.info/docs/5.4/select#setup-formatting
 												
-						COL oCol TO oBrw CONFIG { 'title' => "Código", 'field' => "CODE", 'width' => 200, 'headerFilter' => "input", 'headerFilterPlaceholder' => "Buscar código..." }
-						COL oCol TO oBrw CONFIG { 'title' => "Nombre Completo", 'field' => "FULLNAME", 'headerFilter' => "input", 'headerFilterPlaceholder' => "Buscar nombre...", 'formatter' => "html", 'formatterParams' => { 'target' => "_blank" } }
+						COL oCol TO oBrw CONFIG { 'title' => "Código", 'field' => "CODCLI", 'width' => 150, 'headerFilter' => "input", 'headerFilterPlaceholder' => "Buscar código..." }
+						COL oCol TO oBrw CONFIG { 'title' => "Nombre Completo", 'field' => "NOMCLI", 'width' => 300, 'headerFilter' => "input", 'headerFilterPlaceholder' => "Buscar nombre...", 'formatter' => "html", 'formatterParams' => { 'target' => "_blank" } }
 						
-					INIT BROWSE oBrw DATA aData													
+					INIT BROWSE oBrw												
 			
 				ENDCOL o				
 				
 			ENDROW o
+
+			
+			ROWGROUP o ID 'barnav' VALIGN 'center' HALIGN 'center' //CLASS "pl-3 pr-3" //HIDDEN
+				COL o GRID 12
+					HTML o INLINE '<div class="mybar pt-1 pb-1">'
+						COL o GRID 12				
+							
+							GET ID 'nav_total' VALUE '' HIDDEN OF o
+							GET ID 'nav_conn' VALUE '' HIDDEN OF o
+							GET ID 'nav_page_total' VALUE '' HIDDEN OF o
+							
+							HTML o INLINE '<div class="btn-group test_say">' 	
+								SAY LABEL 'Rows' GRID 'auto' OF o
+								SELECT ID 'nav_page_rows' PROMPT  '10', '50', '100' GRID 'auto' ONCHANGE 'nav_refresh' OF o					
+							HTML o INLINE '</div>'
+							
+							HTML o INLINE '<div class="btn-group" style="float:right;">' 															
+								BUTTON ID 'btn_top'  ACTION 'nav_top' GRID 0  CLASS 'btn btn-outline-dark btn_nav'  ICON '<i class="fa fa-step-backward" aria-hidden="true"></i>' OF o
+								BUTTON ID 'btn_prev' ACTION 'nav_prev' GRID 0  CLASS 'btn btn-outline-dark btn_nav'  ICON '<i class="fa fa-backward" aria-hidden="true"></i>' OF o
+								GET ID 'nav_page' VALUE '' GRID 0 STYLE 'width:60px;' ALIGN 'center' ONCHANGE 'nav_refresh' OF o
+								BUTTON ID 'btn_next' ACTION 'nav_next' GRID 0  CLASS 'btn btn-outline-dark btn_nav' ICON '<i class="fa fa-forward" aria-hidden="true"></i>' OF o
+								BUTTON ID 'btn_end'  ACTION 'nav_end' GRID 0  CLASS 'btn btn-outline-dark btn_nav' ICON '<i class="fa fa-fast-forward" aria-hidden="true"></i>'  OF o
+							HTML o INLINE '</div>'
+							
+						ENDCOL o
+					HTML o INLINE '</div>'
+				ENDCOL o				
+			ENDROW o
+
 
 			ROWGROUP o 	HALIGN 'center'								
 				BUTTON LABEL 'Seleccionar' ACTION 'getSelected()' CLASS 'btn-primary' ALIGN 'center' WIDTH '200px' STYLE 'margin: 10px;' GRID 12 OF o 
@@ -52,15 +81,15 @@
 					<script>
 						function getSelected() {
 
-							var o = new UTabulator('Clientes')
+							var o = new UTabulator('dlg_clientes-clientes')
 							var row = o.Proc('getSelectedData')
 
 							if (row && row.length > 0) {
 								var cliente = row[0];
-								var mensaje = 'Código: ' + cliente.CODE + '<br>Nombre: ' + cliente.FULLNAME;
+								var mensaje = 'Código: ' + cliente.CODCLI + '<br>Nombre: ' + cliente.NOMCLI;
 								MsgInfo(mensaje);
 							} else {
-								MsgInfo('Por favor seleccione un cliente de la tabla', 'Aviso');
+								MsgInfo('Por favor seleccione un cliente de la tabla');
 							}
 						}
 					</script>

@@ -10,7 +10,8 @@
 
 
 app\app.prg
-app\api_controls.prg
+app\api_recepcion.prg
+app\api_clientes.prg
 
 
 {gcc}-Llib\uhttpd2\gcc

@@ -9,7 +9,7 @@ local cStyle_Icon := 'border: 1px solid #058232; box-shadow: 4px 4px 4px grey; m
 DEFINE WEB oWeb TITLE 'Style'
 	HTML oWeb FILE '..\tpl\header_examples.tpl' PARAMS 'Controls', 'Styles'
 
-	DEFINE FORM o ID 'form_pedidos' API 'api_controls' OF oWeb
+	DEFINE FORM o ID 'form_pedidos' API 'api_recepcion' OF oWeb
 		//o:lDessign := .t.
 		//o:lFluid := .t.
 		o:cSizing := 'sm'

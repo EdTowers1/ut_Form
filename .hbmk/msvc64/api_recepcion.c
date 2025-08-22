@@ -1,0 +1,65 @@
+/*
+ * Harbour 3.2.0dev (r2410281557)
+ * Microsoft Visual C 19.32.31329 (64-bit)
+ * Generated C source from "app\api_recepcion.prg"
+ */
+
+#include "hbvmpub.h"
+#include "hbinit.h"
+
+
+HB_FUNC( API_RECEPCION );
+HB_FUNC_STATIC( DOHELPCLI );
+HB_FUNC_EXTERN( ULOADHTML );
+
+
+HB_INIT_SYMBOLS_BEGIN( hb_vm_SymbolInit_API_RECEPCION )
+{ "API_RECEPCION", {HB_FS_PUBLIC | HB_FS_FIRST | HB_FS_LOCAL}, {HB_FUNCNAME( API_RECEPCION )}, NULL },
+{ "GETPROC", {HB_FS_PUBLIC | HB_FS_MESSAGE}, {NULL}, NULL },
+{ "DOHELPCLI", {HB_FS_STATIC | HB_FS_LOCAL}, {HB_FUNCNAME( DOHELPCLI )}, NULL },
+{ "SETERROR", {HB_FS_PUBLIC | HB_FS_MESSAGE}, {NULL}, NULL },
+{ "SEND", {HB_FS_PUBLIC | HB_FS_MESSAGE}, {NULL}, NULL },
+{ "ULOADHTML", {HB_FS_PUBLIC}, {HB_FUNCNAME( ULOADHTML )}, NULL },
+{ "SETDIALOG", {HB_FS_PUBLIC | HB_FS_MESSAGE}, {NULL}, NULL }
+HB_INIT_SYMBOLS_EX_END( hb_vm_SymbolInit_API_RECEPCION, "app\\api_recepcion.prg", 0x0, 0x0003 )
+
+#if defined( HB_PRAGMA_STARTUP )
+   #pragma startup hb_vm_SymbolInit_API_RECEPCION
+#elif defined( HB_DATASEG_STARTUP )
+   #define HB_DATASEG_BODY    HB_DATASEG_FUNC( hb_vm_SymbolInit_API_RECEPCION )
+   #include "hbiniseg.h"
+#endif
+
+HB_FUNC( API_RECEPCION )
+{
+	static const HB_BYTE pcode[] =
+	{
+		13,0,1,36,4,0,48,1,0,95,1,112,0,106,
+		8,104,101,108,112,67,108,105,0,8,28,11,176,2,
+		0,95,1,20,1,25,46,36,6,0,48,3,0,95,
+		1,106,23,80,114,111,99,32,100,111,110,39,116,32,
+		100,101,102,105,110,101,100,32,61,62,32,0,48,1,
+		0,95,1,112,0,72,112,1,73,36,9,0,48,4,
+		0,95,1,112,0,110,7
+	};
+
+	hb_vmExecute( pcode, symbols );
+}
+
+HB_FUNC_STATIC( DOHELPCLI )
+{
+	static const HB_BYTE pcode[] =
+	{
+		13,2,1,36,18,0,176,5,0,106,34,46,46,47,
+		104,116,109,108,47,97,121,117,100,97,115,47,97,121,
+		117,100,97,95,99,108,105,101,110,116,101,46,104,116,
+		109,108,0,12,1,80,2,36,19,0,177,0,0,80,
+		3,36,22,0,106,9,67,108,105,101,110,116,101,115,
+		0,95,3,106,6,116,105,116,108,101,0,2,36,26,
+		0,48,6,0,95,1,106,4,120,120,120,0,95,2,
+		100,95,3,112,4,73,36,28,0,100,110,7
+	};
+
+	hb_vmExecute( pcode, symbols );
+}
+
