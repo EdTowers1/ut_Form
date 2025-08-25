@@ -363,7 +363,6 @@ static function DoSelecionar_Cliente (oDom)
 		if oQry != NIL .and. !oQry:eof()
 			hFull := oQry:FillHRow()
 			
-			//
 			//oDom:Console({ 'cliente' => hFull })
 		
 			cInfoCliente := "ID: " + ltrim(str(hFull['row_id'])) + CHR(13) + CHR(10) + ;
